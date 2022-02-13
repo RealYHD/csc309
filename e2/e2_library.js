@@ -149,7 +149,7 @@ function returnBookToLibrary(e) {
 	if (!e.target.classList.contains("return")) return;
 
 	// Call removeBookFromPatronTable()
-	let selectedBook = libraryBooks[e.target.parentElement.parentElement.firstChild.innerText];
+	let selectedBook = libraryBooks[e.target.parentElement.parentElement.querySelector("td").innerText.trim()];
 	removeBookFromPatronTable(selectedBook);
 
 	// Change the book object to have a patron of 'null'
@@ -164,7 +164,7 @@ function addNewPatron(e) {
 
 	// Add a new patron to global array
 	let name = document.getElementById("newPatronName").value;
-	let newPatron = Patron(name);
+	let newPatron = new Patron(name);
 	patrons.push(newPatron);
 
 	// Call addNewPatronEntry() to add patron to the DOM
@@ -229,21 +229,21 @@ function displayBookInfo(book) {
 // (don't forget to add a 'return' button).
 function addBookToPatronLoans(book) {
 	// Add code here
-	document.querySelectorAll("#patrons patron").forEach(patronElem => {
+	document.querySelectorAll("#patrons .patron").forEach(patronElem => {
 		if (patronElem.children[1].querySelector("span.bold").innerText == book.patron.cardNumber) {
 			let loansTableElem = patronElem.querySelector("table.patronLoansTable");
 			let bookRowElem = loansTableElem.insertRow(-1);
-			bookRowElem.addCell(-1).innerText = book.bookId;
-			bookRowElem.addCell(-1).innerText = book.title;
+			bookRowElem.insertCell(-1).innerText = book.bookId;
+			bookRowElem.insertCell(-1).innerHTML = "<strong>" + book.title + "</strong>";
 			let statusSpanElem = document.createElement("span");
 			statusSpanElem.classList.add("green");
 			statusSpanElem.innerText = "Within due date";
-			bookRowElem.addCell(-1).appendChild(statusSpanElem);
+			bookRowElem.insertCell(-1).appendChild(statusSpanElem);
 
 			let returnBtnElem = document.createElement("button");
 			returnBtnElem.classList.add("return");
 			returnBtnElem.innerText = "return";
-			bookRowElem.addCell(-1).appendChild(returnBtnElem); // TODO Finish return event.
+			bookRowElem.insertCell(-1).appendChild(returnBtnElem); // TODO Finish return event.
 			return;
 		}
 	});
@@ -254,10 +254,12 @@ function addBookToPatronLoans(book) {
 function addNewPatronEntry(patron) {
 	// Add code here
 	let patronElem = document.createElement("div");
+	patronElem.innerHTML = "Name: <span class='bold'>" + patron.name + "</span>";
 	patronElem.classList.add("patron");
-	let nameElem = document.createElement("p").innerHTML = "Name: <span class='bold'>" + patron.name + "</span>";
+	let nameElem = document.createElement("p");
 	patronElem.appendChild(nameElem);
-	let cardNumberElem = document.createElement("p").innerHTML = "Card Number: <span class='bold'>" + patron.cardNumber + "</span>";
+	let cardNumberElem = document.createElement("p");
+	cardNumberElem.innerHTML = "Card Number: <span class='bold'>" + patron.cardNumber + "</span>";
 	patronElem.appendChild(cardNumberElem);
 
 	let loansTable = document.createElement("table");
@@ -278,11 +280,11 @@ function addNewPatronEntry(patron) {
 // Removes book from patron's book table and remove patron card number from library book table
 function removeBookFromPatronTable(book) {
 	// Add code here
-	document.querySelectorAll("#patron patron").forEach(patronElem => {
-		if (patronElem.children[1].querySelector("span.bold").innerText == book.patron.cardNumber) {
-			patronElem.querySelector("table.patronLoansTable tr").forEach(row => {
-				if (row.firstChild.innerText == book.bookId) {
-					row.parentElement.removeChild(row);
+	document.querySelectorAll("#patrons .patron").forEach(patronElem => {
+		if (patronElem.children[1].querySelector("span.bold").innerText.trim() == book.patron.cardNumber) {
+			patronElem.querySelectorAll("table.patronLoansTable tr").forEach(row => {
+				if (row.querySelector("td").innerText.trim() == book.bookId) {
+					row.remove();
 					return;
 				}
 			});
@@ -294,7 +296,7 @@ function removeBookFromPatronTable(book) {
 function changeToOverdue(book) {
 	// Add code here
 	document.querySelectorAll("#patrons .patron").forEach(patronElem => {
-		if (patronElem.children[1].querySelector("span.bold").innerText == book.patron.cardNumber) {
+		if (patronElem.children[1].querySelector("span.bold").innerText.trim() == book.patron.cardNumber) {
 			let dueElem = patronElem.querySelector("table.patronLoansTable td span.green");
 			if (dueElem) {
 				dueElem.innerText = "Overdue";
