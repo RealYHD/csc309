@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 // DO NOT CHANGE THIS FILE
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/RestaurantAPI', { useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/RestaurantAPI', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // DO NOT CHANGE THIS FILE
 module.exports = { mongoose }

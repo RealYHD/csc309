@@ -7,7 +7,7 @@
  * any changes, are expressly prohibited.
 */
 
-/* Reservations.js */ 
+/* Reservations.js */
 'use strict';
 
 const log = console.log
@@ -20,7 +20,7 @@ const startSystem = () => {
 
 	try {
 		status = getSystemStatus();
-	} catch(e) {
+	} catch (e) {
 		status = {
 			numRestaurants: 0,
 			totalReservations: 0,
@@ -48,7 +48,7 @@ const getSystemStatus = () => {
 // You can add arguments to updateSystemStatus if you want.
 const updateSystemStatus = () => {
 	const status = {}
-	
+
 	/* Add your code below */
 
 	fs.writeFileSync('status.json', JSON.stringify(status))
@@ -56,12 +56,12 @@ const updateSystemStatus = () => {
 
 const saveRestaurantsToJSONFile = (restaurants) => {
 	/* Add your code below */
-
+	fs.writeFileSync('restaurants_example.json', JSON.stringify(restaurants))
 };
 
 const saveReservationsToJSONFile = (reservations) => {
 	/* Add your code below */
-
+	fs.writeFileSync('restaurants_example.json', JSON.stringify(reservations))
 };
 
 /*********/
@@ -82,7 +82,7 @@ const addRestaurant = (name, description) => {
 
 // should return the added reservation object
 const addReservation = (restaurant, time, people) => {
-	
+
 	/* Add your code below */
 	const reservation = null; // remove null and assign it to proper value
 	return reservation;
@@ -94,46 +94,53 @@ const addReservation = (restaurant, time, people) => {
 
 // Should return an array - check to make sure restaurants.json exists
 const getAllRestaurants = () => {
-	/* Add your code below */
-
+	if (!fs.existsSync('restaurants.json')) {
+		return [];
+	}
+	let restaurants = JSON.parse(fs.readFileSync('restaurant.json'));
+	return restaurants;
 };
 
 // Should return the restaurant object if found, or an empty object if the restaurant is not found.
 const getRestaurantByName = (name) => {
 	/* Add your code below */
-
+	return getAllRestaurants().find((restuarant) => restaurant.name == name);
 };
 
 // Should return an array - check to make sure reservations.json exists
 const getAllReservations = () => {
-  /* Add your code below */
-
+	/* Add your code below */
+	if (!fs.existsSync('reservations.json')) {
+		return [];
+	}
+	let restaurants = JSON.parse(fs.readFileSync('reservations.json'));
+	return restaurants;
 };
 
 // Should return an array
 const getAllReservationsForRestaurant = (name) => {
 	/* Add your code below */
-
+	getAllReservations().filter((reservation) => reservation.restaurant == name);
 };
 
 
 // Should return an array
 const getReservationsForHour = (time) => {
 	/* Add your code below */
-
+	getAllReservations().filter((reservation) => reservation.time)
 }
 
 // should return a reservation object
 const checkOffEarliestReservation = (restaurantName) => {
-	
+
 	const checkedOffReservation = null; // remove null and assign it to proper value
- 	return checkedOffReservation;
+	return checkedOffReservation;
 }
 
 
 const addDelayToReservations = (restaurant, minutes) => {
 	// Hint: try to use a functional array method
-	
+
 }
 
 startSystem(); // start the system to create status.json (should not be called in app.js)
